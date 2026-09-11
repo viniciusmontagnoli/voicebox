@@ -86,6 +86,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy installed Python packages from builder stage
 COPY --from=backend-builder /install /usr/local
 
+# >>> CORREÇÃO: pedalboard 0.9.25 crasha (SIGILL / exit 132) nessa CPU
+# (AMD EPYC em KVM, sem AVX-512). Fixa a 0.9.24, que foi testada e funciona.
+RUN pip install --no-cache-dir --no-deps --force-reinstall pedalboard==0.9.24
+
 # Copy backend application code
 COPY --chown=voicebox:voicebox backend/ /app/backend/
 
